@@ -26,7 +26,7 @@ export default (function () {
             }
             
             events[evt].forEach((subscription) => {
-                subscription.callback.apply(null, args);
+                subscription.callback.apply(subscription.context, args);
                 if (subscription.once) {
                     EventBus.stopListening(evt, subscription.callback);
                 }
