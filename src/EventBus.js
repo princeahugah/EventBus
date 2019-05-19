@@ -11,12 +11,13 @@ export default (function () {
         }
 
         static listenToOnce(evt, fn, context) {
-            EventBus.listenTo(evt, fn, context);
-
-            events[evt].forEach((subscription) => {
-                if (fn === subscription.callback) {
-                    subscription.once = true;
-                }
+            if (!events[evt]) {
+                events[evt] = [];
+            }
+            events[evt].push({
+                context: context || this,
+                callback: fn,
+                once: true
             });
         }
 
@@ -38,12 +39,17 @@ export default (function () {
                 return false;
             }
 
-            const eventIndex = events[evt].findIndex(
-                subscription => fn === subscription.callback && subscription.once
-            );
+            if (typeof fn === 'function') {
+                const eventIndex = events[evt].findIndex(
+                    subscription => fn === subscription.callback && subscription.once
+                );
 
-            events[evt].splice(eventIndex, 1);
-            delete events[evt];
+                events[evt].splice(eventIndex, 1);
+            }
+
+            if (events[evt].length === 0 || typeof fn !== 'function') {
+                delete events[evt];
+            }
         }
 
         static installTo(obj) {
