@@ -54,7 +54,9 @@ export default (function () {
 
         static installTo(obj) {
             obj.listenTo = EventBus.listenTo;
+            obj.listenToOnce = EventBus.listenToOnce;
             obj.broadcast = EventBus.broadcast;
+            obj.stopListening = EventBus.stopListening;
         }
 
         static getEvents() {
@@ -64,4 +66,4 @@ export default (function () {
     }
     
     return EventBus;
-}());
+})();
